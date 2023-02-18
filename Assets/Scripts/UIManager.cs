@@ -7,6 +7,8 @@ using TMPro;
 public class UIManager : MonoBehaviour
 {
     [SerializeField] private GameObject diedMenu;
+    [SerializeField] private GameObject pauseMenu;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,9 +21,24 @@ public class UIManager : MonoBehaviour
         
     }
 
+    public void pauseMenuChangeState()
+    {
+        diedMenu.SetActive(!diedMenu.activeSelf);
+    }
+
     private void diedMenuActivation()
     {
         diedMenu.SetActive(true);
+    }
+
+    public void goToMenu()
+    {
+        changeScene("Inicio");
+    }
+
+    public void replayScene()
+    {
+        changeScene(SceneManager.GetActiveScene().name);
     }
 
     public void changeScene(string scene)
