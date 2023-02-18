@@ -10,15 +10,25 @@ public class PlayerManager : MonoBehaviour
     public KeyCode right;
     public KeyCode left;
 
-    [SerializeField]
-    private float speed = 30.0f;
-    private float wheelSpeed = 4.0f;
-    private float bodySpeed = 1.0f;
-    private float bodyRotForce = 50.0f;
-    private float gravityRot = 30.0f;
 
     [SerializeField]
-    private float MAX_SPEED = 10.0f;
+    private float wheelSpeed = 20.0f;
+    [SerializeField]
+    private float bodySpeed = 4.0f;
+    [SerializeField]
+    private float bodyRotForce = 100.0f;
+    [SerializeField]
+    private float gravityRot = 140.0f;
+
+    [SerializeField]
+    private float accel = 5f;
+    private float actualVelocity = 0f;
+
+    [SerializeField]
+    private float friction = 10f;
+
+    [SerializeField]
+    private float MAX_SPEED = 20.0f;
 
 
     private Rigidbody rb;
@@ -27,6 +37,7 @@ public class PlayerManager : MonoBehaviour
     private GameObject bodyParent;
 
     public Transform center;
+    public Transform parent;
 
     public Action OnRestartLevel;
     public Action OnNextLevel;
@@ -41,14 +52,17 @@ public class PlayerManager : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
 
-        if(!wheel)
+        if (!wheel)
             wheel = gameObject.transform.Find("Wheel").gameObject;
-        
-        if(!bodyParent)
+
+        if (!bodyParent)
             bodyParent = gameObject.transform.Find("BodyParent").gameObject;
 
-        if(!center)
+        if (!center)
             center = GameObject.Find("Centro").transform;
+
+        if (!parent)
+            parent = gameObject.transform.parent;
 
         //transform.rotation = Quaternion.Euler(0.0f, 45.0f, 0.0f);
     }
@@ -101,27 +115,37 @@ public class PlayerManager : MonoBehaviour
 
     private void playerMovement()
     {
+        if (MathF.Abs(actualVelocity) != 0)
+            actualVelocity -= friction * Math.Sign(actualVelocity) * Time.deltaTime;
+
+        if (MathF.Abs(actualVelocity) >= -0.2f && MathF.Abs(actualVelocity) <= 0.2f)
+            actualVelocity = 0f;
+
+
         if (Input.GetKey(backward))
-        {
-            rb.AddForce(-transform.right * speed);
-            direction = -1.0f;
-        }
+            actualVelocity += accel;
 
         if (Input.GetKey(forward))
-        {
-            rb.AddForce(transform.right * speed);
-            direction = 1.0f;
-        }
+            actualVelocity -= accel;
 
-        if (rb.velocity.magnitude > MAX_SPEED)
-            rb.velocity = transform.right * MAX_SPEED * direction;
 
-        wheel.transform.Rotate(0.0f, 0.0f, rb.velocity.sqrMagnitude * wheelSpeed * Time.deltaTime * -direction, Space.Self);
-        bodyParent.transform.Rotate(0.0f, 0.0f, rb.velocity.sqrMagnitude * bodySpeed * Time.deltaTime * direction, Space.Self);
+        if (Mathf.Abs(actualVelocity) > MAX_SPEED)
+            actualVelocity = MAX_SPEED * Math.Sign(actualVelocity);
+
+        parent.Rotate(Vector3.up * actualVelocity * Time.deltaTime, Space.Self);
+
+
+        wheel.transform.Rotate(0.0f, 0.0f, actualVelocity * wheelSpeed * Time.deltaTime, Space.Self);
+        bodyParent.transform.Rotate(0.0f, 0.0f, -actualVelocity * bodySpeed * Time.deltaTime, Space.Self);
+
+        direction = Math.Sign(actualVelocity);
+
     }
 
     private void bodyRotation()
     {
+
+
         if (Input.GetKey(right))
         {
             bodyParent.transform.Rotate(0.0f, 0.0f, bodyRotForce * Time.deltaTime, Space.Self);
@@ -133,15 +157,24 @@ public class PlayerManager : MonoBehaviour
             bodyParent.transform.Rotate(0.0f, 0.0f, -bodyRotForce * Time.deltaTime, Space.Self);
         }
 
+        float rotzEuler = bodyParent.transform.rotation.eulerAngles.z;
         float rotz = bodyParent.transform.rotation.z;
 
-        bodyParent.transform.Rotate(0.0f, 0.0f, rotz * 100.0f * Time.deltaTime, Space.Self);
+        Debug.Log(rotz);
+        float gravityDirection = 0f;
+        if (Math.Abs(rotzEuler) <= 90f && Math.Abs(rotzEuler) > 0f)
+        {
+            gravityDirection = 1f;
+        }
+        else if (Math.Abs(rotzEuler) < 360f && Math.Abs(rotzEuler) >= 270f)
+        {
+            gravityDirection = -1f;
+        }
+
+        bodyParent.transform.Rotate(0.0f, 0.0f, Math.Abs(rotz) * gravityDirection * gravityRot * Time.deltaTime, Space.Self);
 
         float roty = bodyParent.transform.rotation.eulerAngles.y;
         rotz = bodyParent.transform.rotation.eulerAngles.z;
-
-
-
 
 
         if (rotz >= 90.0f && rotz <= 100.0f)
@@ -153,7 +186,6 @@ public class PlayerManager : MonoBehaviour
         if (rotz <= 270.0f && rotz >= 260.0f)
         {
             bodyParent.transform.rotation = Quaternion.Euler(0.0f, roty, -90);
-
         }
 
 
