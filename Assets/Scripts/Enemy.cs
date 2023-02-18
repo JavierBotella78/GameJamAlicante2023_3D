@@ -15,6 +15,6 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.RotateAround(transform.position, Vector3.up, velocity * Time.deltaTime);
+        transform.RotateAround(Center.position, Vector3.up, velocity * Time.deltaTime);
     }
 }
