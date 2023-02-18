@@ -12,7 +12,10 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField]
     private float speed = 30.0f;
-    private float wheelSpeed = 2.0f;
+    private float wheelSpeed = 4.0f;
+    private float bodySpeed = 1.0f;
+    private float bodyRotForce = 50.0f;
+    private float gravityRot = 30.0f;
 
     [SerializeField]
     private float MAX_SPEED = 10.0f;
@@ -28,14 +31,15 @@ public class PlayerManager : MonoBehaviour
     public Action OnDeathPlaySound;
     public Action OnChocarPlaySound;
     public Action OnIrAlMenu;
+    public Action OnMeMuero;
 
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        wheel = GameObject.Find("Wheel");
-        bodyParent = GameObject.Find("BodyParent");
+        wheel = gameObject.transform.Find("Wheel").gameObject;
+        bodyParent = gameObject.transform.Find("BodyParent").gameObject;
     }
 
     // Update is called once per frame
@@ -47,6 +51,7 @@ public class PlayerManager : MonoBehaviour
     private void FixedUpdate()
     {
         playerMovement();
+        bodyRotation();
     }
 
 
@@ -77,6 +82,46 @@ public class PlayerManager : MonoBehaviour
             rb.velocity = transform.right * MAX_SPEED * direction;
 
         wheel.transform.Rotate(0.0f, 0.0f, rb.velocity.sqrMagnitude * wheelSpeed * Time.deltaTime * -direction, Space.Self);
+        bodyParent.transform.Rotate(0.0f, 0.0f, rb.velocity.sqrMagnitude * bodySpeed * Time.deltaTime * direction, Space.Self);
+    }
+
+    private void bodyRotation()
+    {
+        if (Input.GetKey(right))
+        {
+            bodyParent.transform.Rotate(0.0f, 0.0f, bodyRotForce * Time.deltaTime, Space.Self);
+
+        }
+
+        if (Input.GetKey(left))
+        {
+            bodyParent.transform.Rotate(0.0f, 0.0f, -bodyRotForce * Time.deltaTime, Space.Self);
+        }
+
+        float rotz = bodyParent.transform.rotation.z;
+        float roty = bodyParent.transform.rotation.y;
+
+        bodyParent.transform.Rotate(0.0f, 0.0f, rotz * 100.0f * Time.deltaTime, Space.Self);
+
+        rotz = bodyParent.transform.rotation.eulerAngles.z;
+
+        
+
+        
+
+        if (rotz >= 90.0f && rotz <= 100.0f)
+        {
+            bodyParent.transform.rotation = Quaternion.Euler(0.0f, roty, 90);
+            return;
+        }
+
+        if (rotz <= 270.0f && rotz >= 260.0f)
+        {
+            bodyParent.transform.rotation = Quaternion.Euler(0.0f, roty, -90);
+            
+        }
+        
+
     }
 
     private void checkNextLevelButtonPressed()
@@ -106,9 +151,11 @@ public class PlayerManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.CompareTag("Deadly"))
+        if (collision.gameObject.layer == 9)
         {
             OnDeathPlaySound?.Invoke();
+            OnMeMuero?.Invoke();
         }
     }
+
 }
