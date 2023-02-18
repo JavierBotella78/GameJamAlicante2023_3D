@@ -9,24 +9,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject diedMenu;
     [SerializeField] private GameObject pauseMenu;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void pauseMenuChangeState()
     {
-        diedMenu.SetActive(!diedMenu.activeSelf);
+        pauseMenu.SetActive(!diedMenu.activeSelf);
     }
 
-    private void diedMenuActivation()
+    public void diedMenuActivation()
     {
         diedMenu.SetActive(true);
     }
@@ -39,6 +27,14 @@ public class UIManager : MonoBehaviour
     public void replayScene()
     {
         changeScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void nextLevel()
+    {
+        string[] parts = SceneManager.GetActiveScene().name.Split(" ");
+
+        changeScene(parts[0] + (int.Parse(parts[1])+1));
+
     }
 
     public void changeScene(string scene)
