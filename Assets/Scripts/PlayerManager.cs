@@ -149,12 +149,14 @@ public class PlayerManager : MonoBehaviour
         if (Input.GetKey(right))
         {
             bodyParent.transform.Rotate(0.0f, 0.0f, bodyRotForce * Time.deltaTime, Space.Self);
+            //actualVelocity += accel / 4f;
 
         }
 
         if (Input.GetKey(left))
         {
             bodyParent.transform.Rotate(0.0f, 0.0f, -bodyRotForce * Time.deltaTime, Space.Self);
+            //actualVelocity -= accel / 4f;
         }
 
         float rotzEuler = bodyParent.transform.rotation.eulerAngles.z;
