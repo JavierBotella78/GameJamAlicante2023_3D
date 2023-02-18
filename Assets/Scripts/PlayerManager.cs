@@ -10,7 +10,7 @@ public class PlayerManager : MonoBehaviour
     public KeyCode left;
 
     [SerializeField]
-    private float speed = 3.0f;
+    private float speed = 30.0f;
     private float wheelSpeed = 2.0f;
 
     [SerializeField]
