@@ -26,6 +26,8 @@ public class PlayerManager : MonoBehaviour
     private GameObject wheel;
     private GameObject bodyParent;
 
+    public Transform center;
+
     public Action OnRestartLevel;
     public Action OnNextLevel;
     public Action OnDeathPlaySound;
@@ -38,8 +40,17 @@ public class PlayerManager : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        wheel = gameObject.transform.Find("Wheel").gameObject;
-        bodyParent = gameObject.transform.Find("BodyParent").gameObject;
+
+        if(!wheel)
+            wheel = gameObject.transform.Find("Wheel").gameObject;
+        
+        if(!bodyParent)
+            bodyParent = gameObject.transform.Find("BodyParent").gameObject;
+
+        if(!center)
+            center = GameObject.Find("Centro").transform;
+
+        //transform.rotation = Quaternion.Euler(0.0f, 45.0f, 0.0f);
     }
 
     // Update is called once per frame
@@ -50,6 +61,7 @@ public class PlayerManager : MonoBehaviour
 
     private void FixedUpdate()
     {
+        playerRotation();
         playerMovement();
         bodyRotation();
     }
@@ -62,6 +74,29 @@ public class PlayerManager : MonoBehaviour
     {
         checkRestartButtonPressed();
         checkNextLevelButtonPressed();
+    }
+
+    private void playerRotation()
+    {
+        transform.LookAt(center);
+        transform.eulerAngles = new Vector3(0f, transform.eulerAngles.y, transform.eulerAngles.z);
+        /*
+        Vector2 offset = new Vector2(center.position.x - transform.position.x, center.position.z - transform.position.z);
+
+        float rad = 0f;
+
+        if(offset.x != 0f)
+        {
+            rad = Mathf.Atan(offset.y / offset.x);
+            if(offset.x < 0f)
+            {
+                rad += Mathf.PI;
+            }
+        }
+        transform.eulerAngles = new Vector3(transform.eulerAngles.x, rad * Mathf.Rad2Deg, transform.eulerAngles.z);
+
+        Debug.DrawLine(center.position, transform.position, Color.red);
+        */
     }
 
     private void playerMovement()
@@ -99,15 +134,15 @@ public class PlayerManager : MonoBehaviour
         }
 
         float rotz = bodyParent.transform.rotation.z;
-        float roty = bodyParent.transform.rotation.y;
 
         bodyParent.transform.Rotate(0.0f, 0.0f, rotz * 100.0f * Time.deltaTime, Space.Self);
 
+        float roty = bodyParent.transform.rotation.eulerAngles.y;
         rotz = bodyParent.transform.rotation.eulerAngles.z;
 
-        
 
-        
+
+
 
         if (rotz >= 90.0f && rotz <= 100.0f)
         {
@@ -118,9 +153,9 @@ public class PlayerManager : MonoBehaviour
         if (rotz <= 270.0f && rotz >= 260.0f)
         {
             bodyParent.transform.rotation = Quaternion.Euler(0.0f, roty, -90);
-            
+
         }
-        
+
 
     }
 
