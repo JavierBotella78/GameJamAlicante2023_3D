@@ -104,6 +104,7 @@ public class PlayerManager : MonoBehaviour
     {
         checkRestartButtonPressed();
         checkNextLevelButtonPressed();
+        //checkGoToMenu();
     }
 
     private void playerRotation()
@@ -210,12 +211,14 @@ public class PlayerManager : MonoBehaviour
         if (rotz >= 90.0f && rotz <= 100.0f)
         {
             bodyParent.transform.rotation = Quaternion.Euler(0.0f, roty, 90);
+            OnChocarPlaySound?.Invoke();
             return;
         }
 
         if (rotz <= 270.0f && rotz >= 260.0f)
         {
             bodyParent.transform.rotation = Quaternion.Euler(0.0f, roty, -90);
+            OnChocarPlaySound?.Invoke();
         }
 
 
