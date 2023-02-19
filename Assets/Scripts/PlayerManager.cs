@@ -11,6 +11,7 @@ public class PlayerManager : MonoBehaviour
     public KeyCode left;
     public KeyCode jump;
 
+    private bool floorSound = false;
     private bool isGrounded = false;
 
     [SerializeField]
@@ -48,8 +49,6 @@ public class PlayerManager : MonoBehaviour
 
     private GameObject bodyParent;
 
-    private BoxCollider triggerSuelo;
-
     public Transform center;
     public Transform parent;
 
@@ -77,8 +76,6 @@ public class PlayerManager : MonoBehaviour
 
         if (!parent)
             parent = gameObject.transform.parent;
-
-        triggerSuelo = gameObject.GetComponent<BoxCollider>();
 
         //transform.rotation = Quaternion.Euler(0.0f, 45.0f, 0.0f);
     }
@@ -211,14 +208,28 @@ public class PlayerManager : MonoBehaviour
         if (rotz >= 90.0f && rotz <= 100.0f)
         {
             bodyParent.transform.rotation = Quaternion.Euler(0.0f, roty, 90);
-            OnChocarPlaySound?.Invoke();
+
+            if (floorSound)
+            {
+                OnChocarPlaySound?.Invoke();
+                floorSound = false;
+            }
             return;
         }
 
         if (rotz <= 270.0f && rotz >= 260.0f)
         {
             bodyParent.transform.rotation = Quaternion.Euler(0.0f, roty, -90);
-            OnChocarPlaySound?.Invoke();
+            if (floorSound)
+            {
+                OnChocarPlaySound?.Invoke();
+                floorSound = false;
+            }
+        }
+
+        if ((rotz <= 80f && rotz >= 0f) || (rotz <= 360f && rotz >= 280f))
+        {
+            floorSound = true;
         }
 
 
@@ -264,7 +275,6 @@ public class PlayerManager : MonoBehaviour
             OnDeathPlaySound?.Invoke();
             OnMeMuero?.Invoke();
         }
-
 
     }
 
