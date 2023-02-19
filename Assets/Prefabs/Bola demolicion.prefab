@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 903255273858089170}
   - component: {fileID: 903255273858089171}
   - component: {fileID: 903255273858089168}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Bola demolicion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,9 +182,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -1896143358749940674, guid: a6a89ebddba4d424ba2fc11a4820459f, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a6a89ebddba4d424ba2fc11a4820459f, type: 3}
       propertyPath: m_Name
       value: BolaDemolicion
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a6a89ebddba4d424ba2fc11a4820459f, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2664095721702554713, guid: a6a89ebddba4d424ba2fc11a4820459f, type: 3}
       propertyPath: m_LocalScale.x

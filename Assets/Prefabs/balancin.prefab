@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5118353297173163547}
   - component: {fileID: 5118353297173163546}
   - component: {fileID: 5118353297173163545}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: balancin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,9 +182,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -5411666908448102187, guid: 84962c915da52d84d8c4ceecc7ab6397, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 84962c915da52d84d8c4ceecc7ab6397, type: 3}
       propertyPath: m_Name
       value: Balancin
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 84962c915da52d84d8c4ceecc7ab6397, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1746465525572546305, guid: 84962c915da52d84d8c4ceecc7ab6397, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 6188173950186008039, guid: 84962c915da52d84d8c4ceecc7ab6397, type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84962c915da52d84d8c4ceecc7ab6397, type: 3}
