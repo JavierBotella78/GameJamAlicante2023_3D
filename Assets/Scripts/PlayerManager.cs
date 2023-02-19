@@ -9,6 +9,12 @@ public class PlayerManager : MonoBehaviour
     public KeyCode backward;
     public KeyCode right;
     public KeyCode left;
+    public KeyCode jump;
+
+    private bool isGrounded = false;
+
+    [SerializeField]
+    private float jumpForce = 10f;
 
 
     [SerializeField]
@@ -39,7 +45,10 @@ public class PlayerManager : MonoBehaviour
     private Rigidbody rb;
     private float direction;
     private GameObject wheel;
+
     private GameObject bodyParent;
+
+    private BoxCollider triggerSuelo;
 
     public Transform center;
     public Transform parent;
@@ -68,6 +77,8 @@ public class PlayerManager : MonoBehaviour
 
         if (!parent)
             parent = gameObject.transform.parent;
+
+        triggerSuelo = gameObject.GetComponent<BoxCollider>();
 
         //transform.rotation = Quaternion.Euler(0.0f, 45.0f, 0.0f);
     }
@@ -122,28 +133,39 @@ public class PlayerManager : MonoBehaviour
     {
         //transform.localPosition = new Vector3(initX, transform.position.y, initZ);
 
-        if (MathF.Abs(actualVelocity) != 0)
+        if (isGrounded && MathF.Abs(actualVelocity) != 0)
             actualVelocity -= friction * Math.Sign(actualVelocity) * Time.deltaTime;
 
         if (MathF.Abs(actualVelocity) >= -0.2f && MathF.Abs(actualVelocity) <= 0.2f)
             actualVelocity = 0f;
 
 
-        if (Input.GetKey(backward))
+        if (isGrounded && Input.GetKey(backward))
             actualVelocity += accel;
 
-        if (Input.GetKey(forward))
+        if (isGrounded && Input.GetKey(forward))
             actualVelocity -= accel;
+
+        if (isGrounded && Input.GetKey(jump))
+        {
+            rb.AddForce(transform.up * jumpForce);
+            isGrounded = false;
+        }
+
 
 
         if (Mathf.Abs(actualVelocity) > MAX_SPEED)
             actualVelocity = MAX_SPEED * Math.Sign(actualVelocity);
 
+
         parent.Rotate(Vector3.up * actualVelocity * Time.deltaTime, Space.Self);
 
+        if (isGrounded)
+        {
+            wheel.transform.Rotate(0.0f, 0.0f, actualVelocity * wheelSpeed * Time.deltaTime, Space.Self);
+            bodyParent.transform.Rotate(0.0f, 0.0f, -actualVelocity * bodySpeed * Time.deltaTime, Space.Self);
+        }
 
-        wheel.transform.Rotate(0.0f, 0.0f, actualVelocity * wheelSpeed * Time.deltaTime, Space.Self);
-        bodyParent.transform.Rotate(0.0f, 0.0f, -actualVelocity * bodySpeed * Time.deltaTime, Space.Self);
 
         direction = Math.Sign(actualVelocity);
 
@@ -169,7 +191,6 @@ public class PlayerManager : MonoBehaviour
         float rotzEuler = bodyParent.transform.rotation.eulerAngles.z;
         float rotz = bodyParent.transform.rotation.z;
 
-        Debug.Log(rotz);
         float gravityDirection = 0f;
         if (Math.Abs(rotzEuler) <= 90f && Math.Abs(rotzEuler) > 0f)
         {
@@ -225,13 +246,23 @@ public class PlayerManager : MonoBehaviour
         OnIrAlMenu?.Invoke();
     }
 
-    private void OnTriggerEnter(Collider collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.layer == 9)
+        {
+            isGrounded = true;
+        }
+    }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.layer == 12)
         {
             OnDeathPlaySound?.Invoke();
             OnMeMuero?.Invoke();
         }
+
+
     }
 
 }
