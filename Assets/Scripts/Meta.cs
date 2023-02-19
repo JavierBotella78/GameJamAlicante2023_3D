@@ -19,7 +19,7 @@ public class Meta : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         //anim.Play(MetaAnim);
-        //OnMetaPlaySound?.Invoke();
+        OnMetaPlaySound?.Invoke();
         Invoke(nameof(nextLevel), 1.25f);
     }
 

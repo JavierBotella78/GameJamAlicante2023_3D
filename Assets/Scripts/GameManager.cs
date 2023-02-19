@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Meta meta;
     [SerializeField] private PlayerManager player;
     [SerializeField] private PlayerManager player2;
-    //[SerializeField] private SoundManager soundManager;
+    [SerializeField] private SoundManager soundManager;
     [SerializeField] private UIManager uiManager;
 
     private void OnEnable() { Subscription(true); }
@@ -38,21 +38,22 @@ public class GameManager : MonoBehaviour
     private void addMetaEvents()
     {
         meta.OnPlayerTouch += nextLevel;
-        //meta.OnMetaPlaySound += playVictorySound;
+        meta.OnMetaPlaySound += playVictorySound;
     }
 
     private void deleteMetaEvents()
     {
         meta.OnPlayerTouch -= nextLevel;
-        //meta.OnMetaPlaySound -= playVictorySound;
+        meta.OnMetaPlaySound -= playVictorySound;
     }
 
     private void addPlayerEvents()
     {
         player.OnRestartLevel += restartLevel;
         player.OnNextLevel += nextLevel;
-        //player.OnDeathPlaySound += playLoseSound;
-        //player.OnChocarPlaySound += playChocarSound;
+        player.OnDeathPlaySound += playLoseSound;
+        player.OnChocarPlaySound += playChocarSound;
+        player.OnMeMuero += death;
         player.OnIrAlMenu += goToMenu;
     }
 
@@ -60,29 +61,45 @@ public class GameManager : MonoBehaviour
     {
         player.OnRestartLevel -= restartLevel;
         player.OnNextLevel -= nextLevel;
-        //player.OnDeathPlaySound -= playLoseSound;
-        //player.OnChocarPlaySound -= playChocarSound;
-        //player.OnMeMuero -= death;
+        player.OnDeathPlaySound -= playLoseSound;
+        player.OnChocarPlaySound -= playChocarSound;
+        player.OnMeMuero -= death;
         player.OnIrAlMenu -= goToMenu;
     }
 
     private void addPlayer2Events()
     {
-        player.OnRestartLevel += restartLevel;
-        player.OnNextLevel += nextLevel;
-        //player.OnDeathPlaySound += playLoseSound;
-        //player.OnChocarPlaySound += playChocarSound;
-        player.OnIrAlMenu += goToMenu;
+        player2.OnRestartLevel += restartLevel;
+        player2.OnNextLevel += nextLevel;
+        player2.OnDeathPlaySound += playLoseSound;
+        player2.OnChocarPlaySound += playChocarSound;
+        player2.OnMeMuero += death;
+        player2.OnIrAlMenu += goToMenu;
     }
 
     private void deletePlayer2Events()
     {
-        player.OnRestartLevel -= restartLevel;
-        player.OnNextLevel -= nextLevel;
-        //player.OnDeathPlaySound -= playLoseSound;
-        //player.OnChocarPlaySound -= playChocarSound;
-        //player.OnMeMuero -= death;
-        player.OnIrAlMenu -= goToMenu;
+        player2.OnRestartLevel -= restartLevel;
+        player2.OnNextLevel -= nextLevel;
+        player2.OnDeathPlaySound -= playLoseSound;
+        player2.OnChocarPlaySound -= playChocarSound;
+        player2.OnMeMuero -= death;
+        player2.OnIrAlMenu -= goToMenu;
+    }
+
+    public void playLoseSound()
+    {
+        soundManager.playLoseSound();
+    }
+
+    public void playChocarSound()
+    {
+        soundManager.playChocarSound();
+    }
+
+    public void playVictorySound()
+    {
+        soundManager.playVictorySound();
     }
 
     public void death()
