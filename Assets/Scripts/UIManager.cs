@@ -56,6 +56,7 @@ public class UIManager : MonoBehaviour
     public void goToMenu()
     {
         Time.timeScale = 1f;
+        PlayerPrefs.SetFloat("Y", 0f);
         changeScene("Inicio");
     }
 
@@ -69,18 +70,29 @@ public class UIManager : MonoBehaviour
     {
         string[] parts = SceneManager.GetActiveScene().name.Split(" ");
 
+        int cosa = int.Parse(parts[1]) + 1;
+        if (cosa >2)
+        {
+            PlayerPrefs.SetFloat("Y", 0f);
+            changeScene("Inicio");
+            return;
+        }
+        PlayerPrefs.SetFloat("Y", 0f);
         changeScene(parts[0] + " " + (int.Parse(parts[1])+1));
+
 
     }
 
     public void changeScene(string scene)
     {
+        PlayerPrefs.SetFloat("Y", 0f);
         Time.timeScale = 1f;
         SceneManager.LoadScene(scene);
     }
 
     public void leaveGame()
     {
+        PlayerPrefs.SetFloat("Y", 0f);
         Application.Quit();
     }
 }

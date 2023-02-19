@@ -38,6 +38,8 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField]
     private float friction = 10f;
+    [SerializeField]
+    private float Offsetfriction = 20f;
 
     [SerializeField]
     private float MAX_SPEED = 20.0f;
@@ -101,7 +103,7 @@ public class PlayerManager : MonoBehaviour
     {
         checkRestartButtonPressed();
         checkNextLevelButtonPressed();
-        //checkGoToMenu();
+        checkGoToMenu();
     }
 
     private void playerRotation()
@@ -132,7 +134,7 @@ public class PlayerManager : MonoBehaviour
         //transform.localPosition = new Vector3(initX, transform.position.y, initZ);
 
         if (isGrounded && MathF.Abs(actualVelocity) != 0)
-            actualVelocity -= friction * Math.Sign(actualVelocity) * Time.deltaTime;
+            actualVelocity -= (friction + Offsetfriction) * Math.Sign(actualVelocity) * Time.deltaTime;
 
         if (MathF.Abs(actualVelocity) >= -0.2f && MathF.Abs(actualVelocity) <= 0.2f)
             actualVelocity = 0f;
@@ -212,6 +214,8 @@ public class PlayerManager : MonoBehaviour
             if (floorSound)
             {
                 OnChocarPlaySound?.Invoke();
+                Offsetfriction = 100f;
+
                 floorSound = false;
             }
             return;
@@ -223,6 +227,8 @@ public class PlayerManager : MonoBehaviour
             if (floorSound)
             {
                 OnChocarPlaySound?.Invoke();
+                Offsetfriction = 100f;
+
                 floorSound = false;
             }
         }
@@ -230,6 +236,7 @@ public class PlayerManager : MonoBehaviour
         if ((rotz <= 80f && rotz >= 0f) || (rotz <= 360f && rotz >= 280f))
         {
             floorSound = true;
+            Offsetfriction = 0f;
         }
 
 
@@ -249,9 +256,13 @@ public class PlayerManager : MonoBehaviour
 
     private void checkGoToMenu()
     {
-        if (Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.M))
+       /* if (Input.GetKey(KeyCode.Escape) || Input.GetKey(KeyCode.M))
         {
             GoToMenu();
+        }*/
+        if (Input.GetKey(KeyCode.I))
+        {
+            PlayerPrefs.SetFloat("Y", 0f);
         }
     }
 
