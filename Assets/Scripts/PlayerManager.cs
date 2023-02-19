@@ -12,6 +12,11 @@ public class PlayerManager : MonoBehaviour
 
 
     [SerializeField]
+    private float initZ = -48f;
+    [SerializeField]
+    private float initX = 0f;
+
+    [SerializeField]
     private float wheelSpeed = 20.0f;
     [SerializeField]
     private float bodySpeed = 4.0f;
@@ -115,6 +120,8 @@ public class PlayerManager : MonoBehaviour
 
     private void playerMovement()
     {
+        //transform.localPosition = new Vector3(initX, transform.position.y, initZ);
+
         if (MathF.Abs(actualVelocity) != 0)
             actualVelocity -= friction * Math.Sign(actualVelocity) * Time.deltaTime;
 
