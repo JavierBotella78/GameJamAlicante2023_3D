@@ -85,7 +85,6 @@ public class UIManager : MonoBehaviour
 
     public void changeScene(string scene)
     {
-        PlayerPrefs.SetFloat("Y", 0f);
         Time.timeScale = 1f;
         SceneManager.LoadScene(scene);
     }
