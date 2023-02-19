@@ -8,10 +8,17 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private GameObject diedMenu;
     [SerializeField] private GameObject pauseMenu;
+    [SerializeField] private GameObject controlsMenu;
+
 
     public void pauseMenuChangeState()
     {
         pauseMenu.SetActive(!diedMenu.activeSelf);
+    }
+
+    public void controlsMenuChangeState()
+    {
+        controlsMenu.SetActive(!controlsMenu.activeSelf);
     }
 
     public void diedMenuActivation()
